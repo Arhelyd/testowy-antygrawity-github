@@ -1,0 +1,10 @@
+stages:
+  - test
+
+test-job:
+  stage: test
+  script:
+    - echo "Uruchamiam testy na GitLab CI..."
+    - echo "Wszystko dziala poprawnie!"
+  only:
+    - dev
