@@ -1,0 +1,28 @@
+name: Auto PR to Main
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  create-pr:
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create Pull Request
+        run: |
+          gh pr create \
+            --title "Wdrożenie z gałęzi dev do main" \
+            --body "Automatyczny Pull Request utworzony przez GitHub Actions z gałęzi \`dev\`." \
+            --base main \
+            --head dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true # Ignorujemy błąd, jeśli PR już istnieje
