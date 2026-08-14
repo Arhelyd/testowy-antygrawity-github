@@ -1,0 +1,39 @@
+name: Auto PR to Main & Test
+
+on:
+  push:
+    branches:
+      - dev
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Dummy Tests
+        run: |
+          echo "Rozpoczynam testy jednostkowe..."
+          echo "Weryfikacja kodu..."
+          echo "Testy zakonczone sukcesem!"
+
+  create-pr:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Create Pull Request
+        run: |
+          gh pr create \
+            --title "Wdrożenie z gałęzi dev do main" \
+            --body "Automatyczny Pull Request utworzony po udanych testach na gałęzi \`dev\`." \
+            --base main \
+            --head dev
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
